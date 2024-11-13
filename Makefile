@@ -1,39 +1,38 @@
-# Nome del compilatore
+# Makefile
+
+# Compiler
 CXX = g++
 
-# Opzioni del compilatore
-CXXFLAGS = -Wall -Wextra -std=c++17
+# Compiler flags
+CXXFLAGS = -std=c++11 -Wall
 
-# Directory di output
+# Directories
 OBJDIR = obj
 BINDIR = bin
+SRCDIR = src
 
-# File sorgenti e oggetti
-SRCS = BinaryTree.cpp main.cpp
-OBJS = $(SRCS:%.cpp=$(OBJDIR)/%.o)
+# Source files
+SRC = $(wildcard $(SRCDIR)/*.cpp)
+$(info SRC files: $(SRC))
 
-# Nome del file eseguibile
-TARGET = $(BINDIR)/BinaryTreeApp
+# Object files
+OBJ = $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
-# Regola di default
+# Target executable
+TARGET = $(BINDIR)/Tree-ller
+
+# Default target
 all: $(TARGET)
 
-# Regola per creare l'eseguibile
-$(TARGET): $(OBJS)
-	@mkdir -p $(BINDIR)
-	$(CXX) $(CXXFLAGS) -o $@ $^ -lsfml-graphics -lsfml-window -lsfml-system
+# Link the target executable
+$(TARGET): $(OBJ)
+	$(CXX) $(CXXFLAGS) -o $@ $^
 
-# Regola per creare i file oggetto
-$(OBJDIR)/%.o: %.cpp
+# Compile source files into object files
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(OBJDIR)
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Regola per pulire i file generati
+# Clean up
 clean:
-	rm -rf $(OBJDIR) $(BINDIR)
-
-# Regola per eseguire il programma
-run: $(TARGET)
-	./$(TARGET)
-
-.PHONY: all clean run
+	rm -rf $(OBJDIR) $(BINDIR)/Tree-ller
