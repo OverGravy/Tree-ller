@@ -27,7 +27,6 @@ int main() {
     vector<int> level_order = btree.level_order_traversal();
     for (int j = 0; j < level_order.size(); j++){
         cout << level_order[j] << " ";
-
     }
 
     // print the binary tree in a more readable way
@@ -54,12 +53,13 @@ int main() {
     cout << "Cancel 55: " << btree.cancel(55) << endl;
 
     // print the binary tree
-    cout << "Level order traversal: ";
+    cout << "Level order traversal: " << endl;
     vector<int> level_order2 = btree.level_order_traversal();
     for (int j = 0; j < level_order2.size(); j++){
         cout << level_order2[j] << " ";
 
     }
+    cout << endl;
    
     return 0;
 }

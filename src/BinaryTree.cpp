@@ -19,7 +19,6 @@ BinaryNode *BinaryTree::insert_recursive(BinaryNode *&node, const int value)
         
          // if the node is null create a new node, and change node with the new node
         node = new BinaryNode(value);
-        cout << "Insert: " << value << endl;
         return node; // return the node pointer for the insert function
        
     }
@@ -105,40 +104,103 @@ bool BinaryTree::search(const int value)
 // Cancel a node in the tree recursively finding the succesor if needed to replace the node
 bool BinaryTree::cancel(const int value)
 {
-    // find the node to cancel
-    BinaryNode *node = search_recursive(root, value);
+    // search the father of the node to cancel
+    BinaryNode *node = root;
+    BinaryNode *father = nullptr;
+
+    // if the value is the root i need to find the node pointer and the father pointer
+    if(node->key != value){
+
+        while( (node->left && node->left->key != value)&&(node->right && node->right->key != value) ) {   // find the node to cancel and the father
+            father = node;
+            if (value < node->key)
+                node = node->left;
+            else
+                node = node->right;
+        }
+    }
+
+    cout << "father: " << father->key << endl;
+    cout << "node: " << node->key << endl;
+
+    // if the value is not in the tree
     if (!node)
-        return false; // if the node is not found, return
+        return false;
+
 
     // if the node has two children
     if (node->left && node->right)
     {
         // find the succesor
+        
         BinaryNode *succesor = node->right;                            // the succesor is the leftmost node in the right subtree
+        
+        // Find the father of the succesor
+        BinaryNode *father_succesor = succesor;
         while (succesor->left)
+        {
+            father_succesor = succesor;
             succesor = succesor->left;
+        }
+
         // replace the node with the succesor
         node->key = succesor->key;
-        // delete the succesor
-        cancel(succesor->key);
+
+        // delete the succesor that will alwayse be a leaf
+        delete succesor;
       
+        // update the father pointer to null 
+        father_succesor->left = nullptr;
+
     }
     // case with just one children or no children
-    else
+    else if(node->left || node->right)
     {
         // if the node has one child, replace the node with the child
-        BinaryNode *child = node->left ? node->left : node->right; // if the left child is not null, the child is the left child, otherwise the right child
+        BinaryNode *child;
+
+        // find where is the child
+        if(node->left){
+            child = node->left;
+            node->left = nullptr;    // update the father taht is going to lose the child
+        }
+        else{
+            child = node->right;
+            node->right = nullptr;   // update the father taht is going to lose the child
+        }
+        
+        node->key = child->key;      // update the key of the father with the key of the child
+
+        delete child;
+
+    }else{
+        
+        // if the node is the root
+        if(node == root){
+            root = nullptr;
+            delete node;
+        }else{
+        // update the father pointer to null
+        
+        if(father->left == node)
+            father->left = nullptr;
+        else
+            father->right = nullptr;
+
+        father->key = node->key;    // update the key of the father with the key of the node
+
+        // if the node has no children, just delete the node
         delete node;
-        node = child;
+        
+        }
     }
+
     // update the height of the tree after every cancel
-  //  height = calculate_height_recursive(root);
+    height = calculate_height_recursive(root);
+    return true;
 
-    return true; // successfully deleted the node
+
 }
-
-
-
 
 
 
@@ -156,7 +218,6 @@ vector<int> BinaryTree::level_order_traversal()
     {
         BinaryNode *node = q.front();   // get the first node in the queue without removing it
         q.pop();                        // remove the node from the queue
-        cout << "Node: " << node->key << endl;
         if (node != nullptr)
         {
             result.push_back(node->key); // add the key to the result
@@ -228,3 +289,17 @@ vector<int> BinaryTree::level_order_traversal_print(){
     return result;
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
