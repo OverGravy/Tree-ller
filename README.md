@@ -3,17 +3,22 @@ Small univeristy project: tree implementation as structure and relative operatio
 
 ## Type of tree implemented so far:
 
-- Research binary tree (BT)
+- Binary Search Tree (BST)
 
 ## Operation implemented in BT so far:
 
 - Insertion
-- Cancel     (need to be fixed)
+- Cancel     
 - Search
+- Pre-order travel
+- In-order travel
+- Post-order travel
+- Level travel
 
-# Binary Tree data structure
+# Binary Tree data structure and operation
 
-The binary tree is realized as a structure composed by a root node and a pointer to the left and right child. The key value will be a positive int number for an easy comparasion. This type of trre implement different type of operation privaliging the recursive approach. Traveling the tree is done in three different way: pre-order (implemented with stack), in-order (implemented with stack) and post-order (implemented with stack) por-level(implement with queue) The tree will be printed in a graphical way using the SFML library.
+The binary tree is realized as a structure composed by a root node and a pointer to the left and right child. The key value will be a positive int number for an easy comparasion. This type of trre implement different type of operation privaliging the recursive approach. Traveling the tree is done in three different way: pre-order (implemented with stack), in-order (implemented with stack) and post-order (implemented with stack) por-level(implement with queue) The tree will be printed in a graphical way using the SFML library. 
+
 
 # How to run the project
 

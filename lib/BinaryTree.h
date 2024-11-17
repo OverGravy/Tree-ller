@@ -40,7 +40,7 @@ class BinaryTree : public AbstractTree
 private:
     BinaryNode *root; 
     int height;
-    string name = "ABR"; // name of the tree
+    string name = "BST"; // name of the tree
 
 
     // PRIVATE FUNCTIONS
@@ -56,6 +56,15 @@ private:
 
     // Destroy the tree recursively
     void destroy_tree(const BinaryNode* node);
+
+    // private function that travels in-order recursively
+    void in_order_traversal_recursive(BinaryNode *node, vector<int> &result); 
+
+    // private function that travels pre-order recursively
+    void pre_order_traversal_recursive(BinaryNode *node, vector<int> &result);
+
+    // private function that travels post-order recursively
+    void post_order_traversal_recursive(BinaryNode *node, vector<int> &result);
 
 public:
     // CONSTRUCTORS
@@ -86,6 +95,9 @@ public:
 
     // level-order traversal returning a vector of the key in the tree
     vector<int> level_order_traversal();
+
+    // in-order traversal returning a vector of the key in the tree
+    vector<int> in_order_traversal();
 
     // pre-order traversal returning a vector of the key in the tree
     vector<int> pre_order_traversal();

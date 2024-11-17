@@ -17,27 +17,23 @@ int main() {
     BinaryTree btree;
 
     // insert all the key in the binary tree                   // POTREI DARLO AL COSTRUTTORE DELLA CLASSE mettendo come opzione che se c'è allora lo carica
-    for (int i = 0; i < binary_tree.size(); i++){
-        btree.insert(binary_tree[i]);
+    for (const auto &key : binary_tree){
+        btree.insert(key);
     }
     cout << "Height: " << btree.get_height() << endl;
 
     // print the binary tree
     cout << "Level order traversal: ";
     vector<int> level_order = btree.level_order_traversal();
-    for (int j = 0; j < level_order.size(); j++){
-        cout << level_order[j] << " ";
+    for (const auto &key : level_order){
+        cout << key << " ";
     }
 
     // print the binary tree in a more readable way
     vector<int> level_order_print = btree.level_order_traversal_print();
     cout << endl << "Print the tree: "<< endl;
 
-
-    int space = ((pow(2,btree.get_height())-1)/2)*4;   //((number of node in the last level )/ 2)*(number of digits in the biggest key) 
-
     // find a way to print the tree in a more readable way as a test              
-
     for (int k = 0; k < btree.get_height(); k++){
 
        for (int w = 0; w<pow(2,k); w++){
@@ -56,11 +52,35 @@ int main() {
     btree.cancel(55);
 
     // print the binary tree
-    cout << "Level order traversal: " << endl;
+    cout << "Level order traversal: ";
     vector<int> level_order2 = btree.level_order_traversal();
-    for (int j = 0; j < level_order2.size(); j++){
-        cout << level_order2[j] << " ";
+    for (const auto &key : level_order2){
+        cout << key << " ";
 
+    }
+    cout << endl;
+
+    // print the pre-order traversal
+    cout << "Pre-order traversal: ";
+    vector<int> pre_order = btree.pre_order_traversal();
+    for (const auto &key : pre_order){
+        cout << key << " ";
+    }
+    cout << endl;
+
+    // print the in-order traversal
+    cout << "In-order traversal: ";
+    vector<int> in_order = btree.in_order_traversal();
+    for (const auto &key : in_order){
+        cout << key << " ";
+    }
+    cout << endl;
+
+    // print the post-order traversal
+    cout << "Post-order traversal: ";
+    vector<int> post_order = btree.post_order_traversal();
+    for (const auto &key : post_order){
+        cout << key << " ";
     }
     cout << endl;
 

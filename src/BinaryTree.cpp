@@ -66,6 +66,38 @@ int BinaryTree::calculate_height_recursive(BinaryNode* node) {
 }
 
 
+// private function that travels in-order recursively
+void BinaryTree::in_order_traversal_recursive(BinaryNode *node, vector<int> &result)
+{
+    if (node != nullptr)
+    {
+        in_order_traversal_recursive(node->left, result);  // go left
+        result.push_back(node->key);                       // add the key to the result
+        in_order_traversal_recursive(node->right, result); // go right
+    }
+}
+
+// private function that travels pre-order recursively
+void BinaryTree::pre_order_traversal_recursive(BinaryNode *node, vector<int> &result)
+{
+    if (node != nullptr)
+    {
+        result.push_back(node->key);                       // add the key to the result
+        pre_order_traversal_recursive(node->left, result);  // go left
+        pre_order_traversal_recursive(node->right, result); // go right
+    }
+}
+
+// private function that travels post-order recursively
+void BinaryTree::post_order_traversal_recursive(BinaryNode *node, vector<int> &result)
+{
+    if (node != nullptr)
+    {
+        post_order_traversal_recursive(node->left, result);  // go left
+        post_order_traversal_recursive(node->right, result); // go right
+        result.push_back(node->key);                        // add the key to the result
+    }
+}
 
 
 
@@ -95,8 +127,8 @@ BinaryTree::BinaryTree(const BinaryTree& other) {
 // Constructor that recive the vector of keys of positive integer and insert them in the tree
 BinaryTree::BinaryTree(const vector<int>& keys) : root(nullptr), height(0) {
     // Insert all the keys in the tree
-    for (int i = 0; i < keys.size(); i++) {
-        insert(keys[i]);
+    for (const auto &key : keys) {
+        insert(key);
     }
 }
 
@@ -109,8 +141,8 @@ BinaryTree::BinaryTree(const string name) : root(nullptr), height(0) {
 BinaryTree::BinaryTree(const vector<int>& keys, const string name) : root(nullptr), height(0) {
     this->name = name;
     // Insert all the keys in the tree
-    for (int i = 0; i < keys.size(); i++) {
-        insert(keys[i]);
+    for (const auto &key : keys) {
+        insert(key);
     }
 }
 
@@ -293,6 +325,33 @@ vector<int> BinaryTree::level_order_traversal()
     }
     return result;
 }
+
+// in-order traversal returning a vector of the key in the tree
+vector<int> BinaryTree::in_order_traversal()
+{
+    vector<int> result;
+    in_order_traversal_recursive(root, result);
+    return result;
+}
+
+
+// pre-order traversal returning a vector of the key in the tree
+vector<int> BinaryTree::pre_order_traversal()
+{
+    vector<int> result;
+    pre_order_traversal_recursive(root, result);
+    return result;
+}
+
+// post-order traversal returning a vector of the key in the tree
+vector<int> BinaryTree::post_order_traversal()
+{
+    vector<int> result;
+    post_order_traversal_recursive(root, result);
+    return result;
+}
+
+
 
 
 
