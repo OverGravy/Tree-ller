@@ -4,6 +4,7 @@
 #include "AbstractTree.h"
 #include <iostream>
 #include <vector>
+#include <string>   
 
 //  Node rapresentation:
 
@@ -13,7 +14,7 @@
 
 // Insert: insert a new node in the tree recursively
 // Search: search a node in the tree recursively and return the address of the node if found, nullptr otherwise
-// Cancel: NEED TO BE FIXED
+// Cancel: Cancel a tree considering all the cases (node with no children, one child, two children)
 // Calculate Hight: calculate the height of the tree recursively
 
 // Traveling implemented:
@@ -39,6 +40,8 @@ class BinaryTree : public AbstractTree
 private:
     BinaryNode *root; 
     int height;
+    string name = "ABR"; // name of the tree
+
 
     // PRIVATE FUNCTIONS
 
@@ -55,8 +58,15 @@ private:
     void destroy_tree(const BinaryNode* node);
 
 public:
+    // CONSTRUCTORS
     BinaryTree();
-    ~BinaryTree();                    
+    BinaryTree(const BinaryTree& other);
+    BinaryTree(const vector<int>& keys);
+    BinaryTree(const string name);
+    BinaryTree(const vector<int>& keys, const string name);
+
+    // DESTRUCTOR
+    ~BinaryTree();
 
     // BASIC OPERATION
 
@@ -66,13 +76,24 @@ public:
     // Cancel an existing node and return 1 if it finds it or 0 if it fails ( the node is not in the tree )
     bool cancel(const int value) override;
 
-    // Search a node and return 1 if it finds it or 0 if it fails
+    // Search a node an return the pointer to the node if found, nullptr otherwise
     bool search(const int value) override;
+
+    // Search and return the pointer to the node if found, nullptr otherwise
+    BinaryNode* find(const int value);
 
     // TRAVELING
 
     // level-order traversal returning a vector of the key in the tree
     vector<int> level_order_traversal();
+
+    // pre-order traversal returning a vector of the key in the tree
+    vector<int> pre_order_traversal();
+
+    // post-order traversal returning a vector of the key in the tree
+    vector<int> post_order_traversal();
+
+    // 
 
     //GETTER
 
@@ -82,7 +103,7 @@ public:
     // get the height of the tree
     int get_height() const;
      
-    //Function top get a level order traversal of the tree but modified to print the tree in a more readable way
+    //Function top get a level order traversal of the tree but modified to print the tree in a more readable way. Returns -1 where there is no node
     vector<int> level_order_traversal_print();
 
 };

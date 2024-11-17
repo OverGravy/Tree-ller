@@ -11,7 +11,7 @@ int main() {
 
 
     // set of key to insert in the binarytree
-    vector<int> binary_tree = {40,30,50,60,90,55};
+    vector<int> binary_tree = {40,30,50,60,90,55,87};
     
     // create a new binary tree
     BinaryTree btree;
@@ -47,10 +47,13 @@ int main() {
     }
 
     // search a key in the binary tree
-    cout << endl << "Search 55: " << btree.search(55) << endl;
+    cout << endl << "Searching 55: ";
+    if (btree.search(55))
+        cout << "Found" << endl;
+    else
+        cout << "Not found" << endl; 
 
-    // cancel a key in the binary tree
-    cout << "Cancel 55: " << btree.cancel(55) << endl;
+    btree.cancel(55);
 
     // print the binary tree
     cout << "Level order traversal: " << endl;
@@ -60,6 +63,7 @@ int main() {
 
     }
     cout << endl;
+
    
     return 0;
 }

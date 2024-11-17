@@ -15,10 +15,15 @@ using namespace std;
 BinaryNode *BinaryTree::insert_recursive(BinaryNode *&node, const int value)
 {
 
+
+
     if (!node){
         
          // if the node is null create a new node, and change node with the new node
         node = new BinaryNode(value);
+
+        std::cout << name << " > " << "Inserting a new node:" << value << endl;
+
         return node; // return the node pointer for the insert function
        
     }
@@ -76,8 +81,39 @@ void BinaryTree::destroy_tree(const BinaryNode* node) {
     }
 }
 
-// Constructor
+// COSTRUCTORS
 BinaryTree::BinaryTree() : root(nullptr), height(0) {}
+
+// Copy constructor
+BinaryTree::BinaryTree(const BinaryTree& other) {
+    // Copy the root of the other tree
+    root = other.root;
+    // Copy the height of the other tree
+    height = other.height;
+}
+
+// Constructor that recive the vector of keys of positive integer and insert them in the tree
+BinaryTree::BinaryTree(const vector<int>& keys) : root(nullptr), height(0) {
+    // Insert all the keys in the tree
+    for (int i = 0; i < keys.size(); i++) {
+        insert(keys[i]);
+    }
+}
+
+// Constructor that recive the name of the tree
+BinaryTree::BinaryTree(const string name) : root(nullptr), height(0) {
+    this->name = name;
+}
+
+// Constructor that recive the vector of keys of positive integer and insert them in the tree and the name of the tree
+BinaryTree::BinaryTree(const vector<int>& keys, const string name) : root(nullptr), height(0) {
+    this->name = name;
+    // Insert all the keys in the tree
+    for (int i = 0; i < keys.size(); i++) {
+        insert(keys[i]);
+    }
+}
+
 
 // Destructor
 BinaryTree::~BinaryTree()
@@ -101,27 +137,45 @@ bool BinaryTree::search(const int value)
     return search_recursive(root, value) != nullptr;
 }
 
+// Search a node in the tree recursively and return the address of the node if found, nullptr otherwise
+BinaryNode* BinaryTree::find(const int value)
+{
+    return search_recursive(root, value);
+}
+
 // Cancel a node in the tree recursively finding the succesor if needed to replace the node
 bool BinaryTree::cancel(const int value)
 {
-    // search the father of the node to cancel
     BinaryNode *node = root;
     BinaryNode *father = nullptr;
 
     // if the value is the root i need to find the node pointer and the father pointer
     if(node->key != value){
 
-        while( (node->left && node->left->key != value)&&(node->right && node->right->key != value) ) {   // find the node to cancel and the father
+        while(node != nullptr) {   // find the node to cancel and the father 
+           
             father = node;
-            if (value < node->key)
+            if(node->left!= nullptr){           // check if the value is the left or right child of the father if they exist
+                if(value == node->left->key){
+                   node = node->left;
+                   break;
+                }
+            }
+            else if(node->right!= nullptr){
+                if (value == node->right->key)
+                {
+                    node = node->right;
+                    break;
+                }
+            }
+           if(value < node->key){                // go left if the value is less than the key, right otherwise
                 node = node->left;
-            else
+            }
+            else{
                 node = node->right;
+            }   
         }
     }
-
-    cout << "father: " << father->key << endl;
-    cout << "node: " << node->key << endl;
 
     // if the value is not in the tree
     if (!node)
@@ -129,35 +183,42 @@ bool BinaryTree::cancel(const int value)
 
 
     // if the node has two children
-    if (node->left && node->right)
+    if (node->left!=nullptr && node->right!=nullptr)
     {
         // find the succesor
         
         BinaryNode *succesor = node->right;                            // the succesor is the leftmost node in the right subtree
-        
+
+       
         // Find the father of the succesor
         BinaryNode *father_succesor = succesor;
-        while (succesor->left)
+        while (succesor->left != nullptr)
         {
             father_succesor = succesor;
             succesor = succesor->left;
         }
+        
+        if (father_succesor == succesor) // if the succesor is the right child of the node
+        {
+           
+            node->key = succesor->key;               // replace the node with the succesor
+            node->right = nullptr;                   // update the right pointer of the node to null
+            delete succesor;                         // delete the succesor that will alwayse be a leaf
 
-        // replace the node with the succesor
-        node->key = succesor->key;
+        }else{
+          
+            node->key = succesor->key;              // replace the node with the succesor
+            father_succesor->left = nullptr;        // update the father pointer to null
+            std::cout << name << " > " << "Cancelling a node with 2 children: " << node->key << " " << "Replaced with: " << succesor->key << endl;
+            delete succesor;                        // delete the succesor that will alwayse be a leaf
+        }
 
-        // delete the succesor that will alwayse be a leaf
-        delete succesor;
-      
-        // update the father pointer to null 
-        father_succesor->left = nullptr;
-
+        
+    
     }
-    // case with just one children or no children
-    else if(node->left || node->right)
+    else if(node->left!=nullptr || node->right!= nullptr)        // case with just one children or no children
     {
-        // if the node has one child, replace the node with the child
-        BinaryNode *child;
+        BinaryNode *child;         
 
         // find where is the child
         if(node->left){
@@ -171,25 +232,24 @@ bool BinaryTree::cancel(const int value)
         
         node->key = child->key;      // update the key of the father with the key of the child
 
+        std::cout << name << " > " << "Cancelling a node with 1 child: " << node->key << " " << "Replasing it withe the child: " << child->key << endl;
+
         delete child;
 
-    }else{
+    }else{       // case the node is a leaf
         
-        // if the node is the root
-        if(node == root){
+        if(node == root){                  // if the node is the root
             root = nullptr;
+            std::cout << name << " > " << "Cancelling the root with no children: " << node->key << " " << "The tree is empty" << endl;
             delete node;
-        }else{
-        // update the father pointer to null
-        
-        if(father->left == node)
-            father->left = nullptr;
-        else
-            father->right = nullptr;
-
-        father->key = node->key;    // update the key of the father with the key of the node
-
-        // if the node has no children, just delete the node
+        }else{                             // if the node is not the root
+            if(father->left == node){      // update the father pointer to null
+                father->left = nullptr;
+            }
+            else{
+                father->right = nullptr;
+            }
+            std::cout << name << " > " << "Cancelling a leaf: " << node->key << endl;
         delete node;
         
         }
