@@ -13,7 +13,6 @@ SRCDIR = src
 
 # Source files
 SRC = $(wildcard $(SRCDIR)/*.cpp)
-$(info SRC files: $(SRC))
 
 # Object files
 OBJ = $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
@@ -21,12 +20,15 @@ OBJ = $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 # Target executable
 TARGET = $(BINDIR)/Tree-ller
 
+# SFML libraries
+SFML_LIBS = -lsfml-graphics -lsfml-window -lsfml-system
+
 # Default target
 all: $(TARGET)
 
 # Link the target executable
 $(TARGET): $(OBJ)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(SFML_LIBS)
 
 # Compile source files into object files
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
