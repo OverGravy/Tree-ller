@@ -9,9 +9,8 @@
 
 
 // list of define to draw things
-#define BT_NODE_RADIUS 30
-#define BT_NODE_DISTANCE 100
-#define BT_HIGHT_DISTANCE_BTWEEN_NODES BT_NODE_RADIUS/2
+#define BT_NODE_RADIUS 20
+#define BT_NODE_DISTANCE BT_NODE_RADIUS *2
 
 
 using namespace std;
@@ -21,8 +20,8 @@ class GraphicsCore
 {
 private:
     // screen dimension set by default to 800x600
-    int width = 800;
-    int height = 600;
+    int width = 1920;
+    int height = 1080;
 
     // trees object needed to draw the tree
     BinaryTree* Bt;
