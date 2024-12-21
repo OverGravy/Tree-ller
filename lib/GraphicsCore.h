@@ -30,17 +30,6 @@ private:
     sf::RenderWindow window;
     sf::Font font;
 
-    // vector of circles too draw bt nodes
-    vector<sf::CircleShape> circles;
-
-    //Btree local variable and function to update them
-    vector<int> keys_Bt;
-    bool Bt_redraw = false;
-
-    // function that update Keys_Bt and adjust some parameters
-    void update_Bt();
-
-
 public:
     // constructor
     GraphicsCore(BinaryTree* Bt);

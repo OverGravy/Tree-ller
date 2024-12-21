@@ -2,6 +2,11 @@
 
 #include "../lib/GraphicsCore.h"
 #include <math.h>
+#include <iostream>
+#include <functional>
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+#include <string.h> 
 
 // constructor
 GraphicsCore::GraphicsCore(BinaryTree *Bt) : window(sf::VideoMode(width, height), "Tree-ller")
@@ -32,72 +37,81 @@ GraphicsCore::~GraphicsCore()
     window.close();
 }
 
-// Private function that update Keys_Bt and adjust some parameters
-void GraphicsCore::update_Bt()
-{
-    // update bt keys vector
-    keys_Bt = Bt->level_order_traversal_print();
 
-    // adjust the circle vector
-    circles.resize(keys_Bt.size());
 
-    // get the hight of the tree to understand if it will fit in the window
-    int h = Bt->get_height();
-
-    // calculate max possible height and width defined parameters
-    int max_height = (BT_NODE_RADIUS *2  * h) + (BT_NODE_RADIUS * h);
-    int max_width = (BT_NODE_DISTANCE * pow(2, h - 1)) + (BT_NODE_RADIUS * pow(2, h - 1));
-
-    // if the tree is too big for the window resize the window
-    if (max_height > height || max_width > width)
-    {
-        // resize the window
-        height = max_height + 50;
-        width = max_width + 50;
-        window.setSize(sf::Vector2u(width, height));
-    }
-}
-
-// function to draw the binary tree
 void GraphicsCore::draw_binary_tree()
 {
-    // check if the vector changed
-    if (Bt_redraw)
-    {
-        update_Bt();
-        Bt_redraw = false;
-    }
-
-     keys_Bt = Bt->level_order_traversal_print();
-
-    // height of the tree
     int h = Bt->get_height();
 
-    // clear the window
+    if (h == 0) return; // Handle empty tree
+
+    // Clear the window
     window.clear(sf::Color::Black);
 
+    // Calculate dynamic spacing
+    float level_spacing = static_cast<float>(height) / (h + 1); // Vertical spacing
+    float initial_spacing = static_cast<float>(width) / (pow(2, h - 1) + 1); // Initial horizontal spacing
 
-    // first position of the lefter node on the last level
-    float x = 270;
-    cout << x << endl;
-    float y = h* BT_NODE_RADIUS * 4;
+    // Recursive lambda to draw nodes and edges using BT nodes list
+    std::function<void(BinaryNode*, int, float, float, float)> draw_node = [&](BinaryNode* node, int level, float x, float y, float spacing) {
+        if (!node) return;
 
-    int level = 0;
+        // Draw current node
+        sf::CircleShape circle(BT_NODE_RADIUS);
+        circle.setFillColor(sf::Color::White);
+        circle.setPosition(x - BT_NODE_RADIUS, y - BT_NODE_RADIUS);
+        window.draw(circle);
 
-    for (int i=h; i>0; i--){
-        for (int j=0; j<pow(2,i-1); j++){
-            sf::CircleShape node(BT_NODE_RADIUS);
-            node.setPosition(x + j*BT_NODE_DISTANCE*2*BT_NODE_RADIUS, y);
-            node.setFillColor(sf::Color::White);
-            window.draw(node);
+        // Draw the node's key
+        sf::Text text;
+        text.setFont(font); // Assuming font is loaded
+        text.setString(std::to_string(node->key));
+        text.setCharacterSize(20);
+        text.setFillColor(sf::Color::Black);
+        text.setPosition(x - 10, y - 15); // Center text
+        window.draw(text);
+
+        // Calculate child positions
+        float child_y = y + level_spacing;
+
+        // Draw left child and edge
+        if (node->left)
+        {
+            float child_x = x - spacing / 2.0f;
+            sf::Vertex line[] = {
+                sf::Vertex(sf::Vector2f(x, y + BT_NODE_RADIUS)),
+                sf::Vertex(sf::Vector2f(child_x, child_y - BT_NODE_RADIUS))
+            };
+            window.draw(line, 2, sf::Lines);
+            draw_node(node->left, level + 1, child_x, child_y, spacing / 2.0f);
         }
-        level++;
-        y -= BT_NODE_RADIUS * 4;
-        x += (BT_NODE_RADIUS * 2)*level;
+
+        // Draw right child and edge
+        if (node->right)
+        {
+            float child_x = x + spacing / 2.0f;
+            sf::Vertex line[] = {
+                sf::Vertex(sf::Vector2f(x, y + BT_NODE_RADIUS)),
+                sf::Vertex(sf::Vector2f(child_x, child_y - BT_NODE_RADIUS))
+            };
+            window.draw(line, 2, sf::Lines);
+            draw_node(node->right, level + 1, child_x, child_y, spacing / 2.0f);
+        }
+    };
+
+    // Start drawing from the root node
+    if (Bt->get_root())
+    {
+        float root_x = static_cast<float>(width) / 2.0f; // Center the root horizontally
+        float root_y = level_spacing / 2.0f; // Start at the top with some margin
+        draw_node(Bt->get_root(), 0, root_x, root_y, initial_spacing);
     }
 
+    // Display the rendered tree
     window.display();
 }
+
+
 
 // get the window
 sf::RenderWindow *GraphicsCore::get_window()
