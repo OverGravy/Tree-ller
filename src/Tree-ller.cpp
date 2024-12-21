@@ -34,22 +34,6 @@ int main()
         cout << key << " ";
     }
 
-    // print the binary tree in a more readable way
-    vector<int> level_order_print = btree.level_order_traversal_print();
-    cout << endl
-         << "Print the tree: " << endl;
-
-    // find a way to print the tree in a more readable way as a test
-    for (int k = 0; k < btree.get_height(); k++)
-    {
-
-        for (int w = 0; w < pow(2, k); w++)
-        {
-            cout << level_order_print[pow(2, k) - 1 + w] << "     ";
-        }
-        cout << endl;
-    }
-
     // search a key in the binary tree
     cout << endl
          << "Searching 55: ";

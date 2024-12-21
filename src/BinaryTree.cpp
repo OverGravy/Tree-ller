@@ -367,47 +367,7 @@ int BinaryTree::get_height() const {
     return height;
 }
 
-//Function top get a level order traversal of the tree but modified to print the tree in a more readable way
-vector<int> BinaryTree::level_order_traversal_print(){
 
-    // using a queue cause it's a FIFO data structure
-    vector<int> result;
-    queue<BinaryNode *> q;
-    q.push(root);               // push the root as the first node to visit 
-
-
-    // i have to stop in 2 condition, if the queue is empty or if the result vector is full
-    // cause if its full i have visited all the node in the tree even the null one and i have to stop 
-
-    while (!q.empty() && result.size() < pow(2,height)-1)    
-    {
-        BinaryNode *node = q.front();       // get the first node in the queue without removing it
-        q.pop();                            // remove the node from the queue
-        if (node!= nullptr)
-        {
-            result.push_back(node->key);     // add the key to the result
- 
-            // if theres no chil i then push nuollptr in the queue to keep the structure of the tree
-            if(node->left != nullptr)
-                q.push(node->left);          // push the left child
-            else
-                q.push(nullptr);
-
-            if(node->right != nullptr)
-                q.push(node->right);         // push the right child
-            else
-                q.push(nullptr);
-
-        }else if(node == nullptr){           // if the node is null push 2 null pointer in the queue to keep the structure of the tree
-            result.push_back(-1);
-            q.push(nullptr);
-            q.push(nullptr);
-        }
-       
-    }
-    return result;
-
-}
 
 
 

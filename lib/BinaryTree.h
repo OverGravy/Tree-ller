@@ -114,8 +114,6 @@ public:
 
     // get the height of the tree
     int get_height() const;
-     
-    //Function top get a level order traversal of the tree but modified to print the tree in a more readable way. Returns -1 where there is no node
-    vector<int> level_order_traversal_print();
+    
 
 };
